@@ -14,9 +14,9 @@ const firebaseApp = initializeApp({
   appId: '1:1011742839583:web:d44bf089f0a72a53b6162a',
 });
 
-const auth = getAuth(firebaseApp);
 
 function App() {
+  const auth = getAuth(firebaseApp);
   const [user] = useAuthState(auth);
 
   console.log(user);
@@ -25,9 +25,9 @@ function App() {
     <FirebaseAppContext.Provider value={firebaseApp}>
       <header>
         <div>Phone book</div>
-        {user && <LogoutButton/>}
+        {user && <LogoutButton />}
       </header>
-      <main>{user ? <p>Hola</p> : <SignInPannel/>}</main>
+      <main>{user ? <p>Hola</p> : <SignInPannel />}</main>
     </FirebaseAppContext.Provider>
   );
 }
