@@ -1,5 +1,7 @@
-import SignInPannel from './containers/SignInPannel/SignInPannel';
+import Home from './pages/Home/Home';
+import Login from './pages/Login/Login';
 import LogoutButton from './components/LogoutButton/LogoutButton';
+import { Routes, Route } from 'react-router-dom';
 import FirebaseAppContext from './context/FirebaseAppContext';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
@@ -14,12 +16,9 @@ const firebaseApp = initializeApp({
   appId: '1:1011742839583:web:d44bf089f0a72a53b6162a',
 });
 
-
 function App() {
   const auth = getAuth(firebaseApp);
   const [user] = useAuthState(auth);
-
-  console.log(user);
 
   return (
     <FirebaseAppContext.Provider value={firebaseApp}>
@@ -27,7 +26,12 @@ function App() {
         <div>Phone book</div>
         {user && <LogoutButton />}
       </header>
-      <main>{user ? <p>Hola</p> : <SignInPannel />}</main>
+      <main>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </main>
     </FirebaseAppContext.Provider>
   );
 }
