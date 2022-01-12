@@ -1,7 +1,17 @@
-import { Modal, Box, TextField, FormGroup, Button } from '@mui/material';
+import {
+  Modal,
+  Box,
+  TextField,
+  FormGroup,
+  Button,
+  Snackbar,
+  Alert,
+} from '@mui/material';
+import { useState, useContext } from 'react';
+import FirebaseAppContext from '../../context/FirebaseAppContext';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import AddCircle from '@mui/icons-material/AddCircle';
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/material.css';
+import CustomPhoneInput from '../../components/CustomPhoneInput/CustomPhoneInput';
 
 const boxStyle = {
   positon: 'absolute',
@@ -20,9 +30,57 @@ const modalStyle = {
 };
 
 const AddContactModal = ({ visible, onClose }) => {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [snackVisible, setSnackVisible] = useState(false);
+  const firebaseApp = useContext(FirebaseAppContext);
+
+  const firestore = getFirestore(firebaseApp);
+
+  const handlePhoneInputChange = (val, country) => {
+    const dialCode = country.dialCode;
+    if (!dialCode) return;
+    val = val.slice(dialCode.length);
+
+    setPhoneNumber(`+${dialCode} ${val}`);
+  };
+
+  const handleNameInputChange = (evt) => setContactName(evt.target.value);
+
+  const clearForm = () => {
+    const contactNameInput = document.querySelector('[name="contact-name"]');
+    const phoneNumberInput = document.querySelector('[name="phone-number"]');
+
+    console.log(phoneNumberInput);
+    contactNameInput.value = '';
+
+    setPhoneNumber(null);
+    setContactName('');
+  };
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    console.log('uwu');
+
+    const firestoreDocBody = {
+      phoneNumber,
+      contactName,
+    };
+
+    const addDocumentToDatabase = async () => {
+      const collectionRef = doc(
+        firestore,
+        'uwu',
+        contactName.replaceAll(/[\s]/g, '-')
+      );
+      const docRef = await setDoc(collectionRef, firestoreDocBody);
+      console.log(docRef)
+      if (docRef.id) {
+        setSnackVisible(true);
+      }
+    };
+
+    clearForm();
+    addDocumentToDatabase();
   };
 
   return (
@@ -34,26 +92,22 @@ const AddContactModal = ({ visible, onClose }) => {
         <form onSubmit={handleSubmit} action="">
           <FormGroup>
             <TextField
+              onChange={handleNameInputChange}
+              name="contact-name"
               label="Contact name"
               variant="outlined"
               margin="normal"
+              required
             />
 
-            <PhoneInput
-              inputProps={{
-                name: 'phone',
-                required: true,
-              }}
-              containerStyle={{
-                marginTop: '1em',
-              }}
-              inputStyle={{
-                width: '100%',
-              }}
-              enableSearch
+            <CustomPhoneInput
+              value={phoneNumber}
+              onChange={handlePhoneInputChange}
+              inputName="phone-number"
             />
 
             <Button
+              type="submit"
               variant="contained"
               startIcon={<AddCircle />}
               color="success"
@@ -61,12 +115,21 @@ const AddContactModal = ({ visible, onClose }) => {
                 mt: '3em',
                 mb: '1em',
               }}
-              onClick={handleSubmit}
             >
               Add contact
             </Button>
           </FormGroup>
         </form>
+
+        <Snackbar
+          open={snackVisible}
+          autoHideDuration={2000}
+          onClose={() => setSnackVisible(false)}
+        >
+          <Alert variant="filled" severity="success">
+            Succesfully saved contact
+          </Alert>
+        </Snackbar>
       </Box>
     </Modal>
   );
