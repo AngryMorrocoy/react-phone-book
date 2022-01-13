@@ -1,17 +1,11 @@
-import {
-  Modal,
-  Box,
-  TextField,
-  FormGroup,
-  Button,
-  Snackbar,
-  Alert,
-} from '@mui/material';
+import { Modal, Box, TextField, FormGroup, Button } from '@mui/material';
 import { useState, useContext } from 'react';
 import FirebaseAppContext from '../../context/FirebaseAppContext';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import AddCircle from '@mui/icons-material/AddCircle';
 import CustomPhoneInput from '../../components/CustomPhoneInput/CustomPhoneInput';
+import SuccessfullNotification from '../../components/SuccessfullNotification/SuccessfullNotification';
+import DbContactModel from '../../util/DbContactModel';
 
 const boxStyle = {
   positon: 'absolute',
@@ -49,9 +43,7 @@ const AddContactModal = ({ visible, onClose }) => {
 
   const clearForm = () => {
     const contactNameInput = document.querySelector('[name="contact-name"]');
-    const phoneNumberInput = document.querySelector('[name="phone-number"]');
 
-    console.log(phoneNumberInput);
     contactNameInput.value = '';
 
     setPhoneNumber(null);
@@ -61,23 +53,18 @@ const AddContactModal = ({ visible, onClose }) => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    const firestoreDocBody = {
-      phoneNumber,
-      contactName,
-    };
-
     const addDocumentToDatabase = async () => {
-      const collectionRef = doc(
-        firestore,
-        'uwu',
-        contactName.replaceAll(/[\s]/g, '-')
-      );
-      const docRef = await setDoc(collectionRef, firestoreDocBody);
-      console.log(docRef)
+      const contact = new DbContactModel(contactName, phoneNumber);
+      const [id, docBody] = contact.toJSON();
+
+      const collectionRef = doc(firestore, 'uwu', id);
+      const docRef = await setDoc(collectionRef, docBody);
       if (docRef.id) {
         setSnackVisible(true);
       }
     };
+
+    setSnackVisible(true);
 
     clearForm();
     addDocumentToDatabase();
@@ -121,15 +108,11 @@ const AddContactModal = ({ visible, onClose }) => {
           </FormGroup>
         </form>
 
-        <Snackbar
-          open={snackVisible}
-          autoHideDuration={2000}
+        <SuccessfullNotification
+          snackVisible={snackVisible}
           onClose={() => setSnackVisible(false)}
-        >
-          <Alert variant="filled" severity="success">
-            Succesfully saved contact
-          </Alert>
-        </Snackbar>
+          text="Successfully created contact."
+        />
       </Box>
     </Modal>
   );
