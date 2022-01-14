@@ -6,6 +6,7 @@ import AddCircle from '@mui/icons-material/AddCircle';
 import CustomPhoneInput from '../../components/CustomPhoneInput/CustomPhoneInput';
 import SuccessfullNotification from '../../components/SuccessfullNotification/SuccessfullNotification';
 import DbContactModel from '../../util/DbContactModel';
+import useUser from '../../hooks/useUser';
 
 const boxStyle = {
   positon: 'absolute',
@@ -28,6 +29,7 @@ const AddContactModal = ({ visible, onClose }) => {
   const [contactName, setContactName] = useState('');
   const [snackVisible, setSnackVisible] = useState(false);
   const firebaseApp = useContext(FirebaseAppContext);
+  const [user] = useUser();
 
   const firestore = getFirestore(firebaseApp);
 
@@ -57,7 +59,7 @@ const AddContactModal = ({ visible, onClose }) => {
       const contact = new DbContactModel(contactName, phoneNumber);
       const [id, docBody] = contact.toJSON();
 
-      const collectionRef = doc(firestore, 'uwu', id);
+      const collectionRef = doc(firestore, user.uid, id);
       const docRef = await setDoc(collectionRef, docBody);
       if (docRef.id) {
         setSnackVisible(true);

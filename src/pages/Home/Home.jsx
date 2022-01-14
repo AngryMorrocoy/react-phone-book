@@ -3,23 +3,32 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 import { getFirestore, collection } from 'firebase/firestore';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import FirebaseAppContext from '../../context/FirebaseAppContext';
 import RequiresAuth from '../../components/RequiresAuth/RequiresAuth';
 import AddContactModal from '../../containers/AddContactModal/AddContactModal';
 import ContactsList from '../../containers/ContactsList/ContactsList';
+import useUser from '../../hooks/useUser';
 
 const Home = () => {
+  let values;
+
   const firebaseApp = useContext(FirebaseAppContext);
   const firestore = getFirestore(firebaseApp);
   const [addContactVisible, setAddContactVisible] = useState(false);
 
-  const [values] = useCollection(collection(firestore, 'uwu'));
-  // RequiresAuth
+  const [user] = useUser();
+
+  if (user) [values] = useCollection(collection(firestore, user.uid));
+
   return (
     <RequiresAuth>
-      <Stack alignItems="center" spacing={4}>
-        {values ? <ContactsList contacts={values.docs} /> : <LinearProgress />}
+      <Stack alignItems="center" spacing={4} pb={2}>
+        {values ? (
+          <ContactsList contacts={values.docs} />
+        ) : (
+          <CircularProgress />
+        )}
 
         <Button
           color="success"

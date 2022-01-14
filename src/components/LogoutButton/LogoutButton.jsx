@@ -1,5 +1,7 @@
 import { useContext } from 'react';
 import FirebaseAppContext from '../../context/FirebaseAppContext';
+import Button from '@mui/material/Button';
+import Logout from '@mui/icons-material/Logout';
 import { signOut, getAuth } from 'firebase/auth';
 
 const LogoutButton = () => {
@@ -10,7 +12,16 @@ const LogoutButton = () => {
     signOut(auth);
   };
 
-  return <button onClick={logout}>logout</button>;
+  return (
+    <Button
+      color="error"
+      variant="contained"
+      onClick={logout}
+      endIcon={<Logout />}
+    >
+      Logout
+    </Button>
+  );
 };
 
 export default LogoutButton;

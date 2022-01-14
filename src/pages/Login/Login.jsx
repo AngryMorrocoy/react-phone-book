@@ -3,6 +3,7 @@ import useUser from '../../hooks/useUser';
 import { Navigate } from 'react-router-dom';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import FirebaseAppContext from '../../context/FirebaseAppContext';
+import Button from '@mui/material/Button';
 
 const Login = () => {
   const [user] = useUser();
@@ -20,7 +21,7 @@ const Login = () => {
 
   return (
     <div>
-      <button onClick={loginGoogle}>Login with google</button>
+      <Button variant="contained" onClick={loginGoogle}>Login with google</Button>
     </div>
   );
 };

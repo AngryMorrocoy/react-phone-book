@@ -1,11 +1,9 @@
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
-import LogoutButton from './components/LogoutButton/LogoutButton';
 import { Routes, Route } from 'react-router-dom';
 import FirebaseAppContext from './context/FirebaseAppContext';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import Header from './components/Header/Header';
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyBiLmj_-ewjHA2e23KdLd44HJOY6aCHRDQ',
@@ -17,15 +15,10 @@ const firebaseApp = initializeApp({
 });
 
 function App() {
-  const auth = getAuth(firebaseApp);
-  const [user] = useAuthState(auth);
 
   return (
     <FirebaseAppContext.Provider value={firebaseApp}>
-      <header>
-        <div>Phone book</div>
-        {user && <LogoutButton />}
-      </header>
+      <Header />
       <main>
         <Routes>
           <Route path="/login" element={<Login />} />
