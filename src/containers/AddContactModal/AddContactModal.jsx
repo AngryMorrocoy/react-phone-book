@@ -1,5 +1,5 @@
 import { Modal, Box, TextField, FormGroup, Button } from '@mui/material';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import FirebaseAppContext from '../../context/FirebaseAppContext';
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import AddCircle from '@mui/icons-material/AddCircle';
@@ -30,6 +30,10 @@ const AddContactModal = ({ visible, onClose }) => {
   const [snackVisible, setSnackVisible] = useState(false);
   const firebaseApp = useContext(FirebaseAppContext);
   const [user] = useUser();
+
+  useEffect(() => {
+    if (visible) setSnackVisible(false);
+  }, [visible]);
 
   const firestore = getFirestore(firebaseApp);
 
