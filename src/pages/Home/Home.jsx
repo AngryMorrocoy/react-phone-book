@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { getFirestore, collection } from 'firebase/firestore';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import LinearProgress from '@mui/material/LinearProgress';
 import FirebaseAppContext from '../../context/FirebaseAppContext';
 import RequiresAuth from '../../components/RequiresAuth/RequiresAuth';
@@ -17,20 +18,22 @@ const Home = () => {
   // RequiresAuth
   return (
     <RequiresAuth>
-      {values ? <ContactsList contacts={values.docs} /> : <LinearProgress />}
+      <Stack alignItems="center" spacing={4}>
+        {values ? <ContactsList contacts={values.docs} /> : <LinearProgress />}
 
-      <Button
-        color="success"
-        variant="contained"
-        onClick={() => setAddContactVisible(true)}
-      >
-        Add contact
-      </Button>
+        <Button
+          color="success"
+          variant="contained"
+          onClick={() => setAddContactVisible(true)}
+        >
+          Add contact
+        </Button>
 
-      <AddContactModal
-        visible={addContactVisible}
-        onClose={() => setAddContactVisible(false)}
-      />
+        <AddContactModal
+          visible={addContactVisible}
+          onClose={() => setAddContactVisible(false)}
+        />
+      </Stack>
     </RequiresAuth>
   );
 };
