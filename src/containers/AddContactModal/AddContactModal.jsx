@@ -1,7 +1,7 @@
 import { Modal, Box, TextField, FormGroup, Button } from '@mui/material';
 import { useState, useContext, useEffect } from 'react';
 import FirebaseAppContext from '../../context/FirebaseAppContext';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 import AddCircle from '@mui/icons-material/AddCircle';
 import CustomPhoneInput from '../../components/CustomPhoneInput/CustomPhoneInput';
 import SuccessfullNotification from '../../components/SuccessfullNotification/SuccessfullNotification';
@@ -61,10 +61,10 @@ const AddContactModal = ({ visible, onClose }) => {
 
     const addDocumentToDatabase = async () => {
       const contact = new DbContactModel(contactName, phoneNumber);
-      const [id, docBody] = contact.toJSON();
+      const docBody = contact.toJSON();
 
-      const collectionRef = doc(firestore, user.uid, id);
-      const docRef = await setDoc(collectionRef, docBody);
+      const collectionRef = collection(firestore, user.uid);
+      const docRef = await addDoc(collectionRef, docBody);
       if (docRef.id) {
         setSnackVisible(true);
       }
