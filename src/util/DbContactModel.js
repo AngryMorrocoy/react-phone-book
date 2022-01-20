@@ -5,15 +5,10 @@ class DbContactModel {
   }
 
   toJSON() {
-    const id = this.contactName.replaceAll(/[\s\\]/g, '-').toLowerCase();
-
-    return [
-      id,
-      {
+    return {
         contactName: this.contactName,
         phoneNumber: this.phoneNumber,
-      },
-    ];
+    }
   }
 }
 

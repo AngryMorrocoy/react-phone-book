@@ -15,7 +15,6 @@ const firebaseApp = initializeApp({
 });
 
 function App() {
-
   return (
     <FirebaseAppContext.Provider value={firebaseApp}>
       <Header />
