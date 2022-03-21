@@ -12,7 +12,9 @@ const Header = () => {
         direction="row"
         justifyContent="space-between"
         spacing={3}
-        p="2em .5em"
+        sx={{
+          p: 3,
+        }}
       >
         <Typography variant="h5">Phone book</Typography>
         {user && <LogoutButton />}

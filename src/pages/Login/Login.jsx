@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import FirebaseAppContext from '../../context/FirebaseAppContext';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 
 const Login = () => {
   const [user] = useUser();
@@ -20,9 +21,11 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <Button variant="contained" onClick={loginGoogle}>Login with google</Button>
-    </div>
+    <Stack alignItems="center" justifyContent="center" spacing={4} pb={2}>
+      <Button variant="contained" onClick={loginGoogle}>
+        Login with google
+      </Button>
+    </Stack>
   );
 };
 
