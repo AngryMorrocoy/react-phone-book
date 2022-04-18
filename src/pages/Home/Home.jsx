@@ -24,11 +24,8 @@ const Home = () => {
   return (
     <RequiresAuth>
       <Stack alignItems="center" spacing={4} pb={2}>
-        {values ? (
-          <ContactsList contacts={values.docs} />
-        ) : (
-          <CircularProgress />
-        )}
+        {values && <ContactsList contacts={values.docs} />}
+        {!values && <CircularProgress />}
 
         <Button
           color="success"

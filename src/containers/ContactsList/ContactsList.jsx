@@ -17,7 +17,7 @@ const ContactsList = ({ contacts }) => {
   const db = getFirestore(firebaseApp);
 
   const deleteContact = () => {
-    const contactId = currentContact;
+    const contactId = currentContact.id;
     const docRef = doc(db, user.uid, contactId);
 
     const deleteDocument = async () => {
